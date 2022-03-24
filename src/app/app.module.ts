@@ -8,11 +8,6 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 
-// import {
-//   StreamChatModule,
-//   StreamAutocompleteTextareaModule,
-// } from 'stream-chat-angular';
-
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -21,7 +16,6 @@ import { AppComponent } from './app.component'
     IonicModule.forRoot(),
     AppRoutingModule,
     TranslateModule.forRoot(),
-    // StreamChatModule,
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
