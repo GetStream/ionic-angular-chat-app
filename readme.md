@@ -46,6 +46,7 @@ Steps:
 - [Configuring dashboard notifications on the Stream dashboard](https://getstream.io/chat/docs/sdk/android/client/guides/push-notifications/firebase/#configuring-notifications-on-the-stream-dashboard)
 - This application uses the [`@capactior/push-notifications`](https://capacitorjs.com/docs/apis/push-notifications) plugin, you can follow [Capacitor's guide on how to set it up with Firebase](https://capacitorjs.com/docs/guides/push-notifications-firebase)
 - This application uses [`@capactior/local-notifications`](https://capacitorjs.com/docs/apis/local-notifications) to display the received notification to the user
+- the `src/app/home/home.page.ts` component includes the necessary set up (please note that our API won't deliver notifications if the user has an open WebSocket connection, so you have to disconnect when the app is paused, and reconnect when it's resumed)
 
 Please note that our v2 push API uses data-only notifications and the `@capactitor/push-notification` plugin [won't deliver those if the application is killed](https://capacitorjs.com/docs/apis/push-notifications#silent-push-notifications-data-only-notifications).
 
