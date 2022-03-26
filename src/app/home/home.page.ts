@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
-import { LocalNotifications } from '@capacitor/local-notifications'
 import { PushNotifications } from '@capacitor/push-notifications'
 import { Platform } from '@ionic/angular'
 import { environment } from 'src/environments/environment'
@@ -49,6 +48,7 @@ export class HomePage implements OnInit {
       await this.addListeners();
       await this.getDeliveredNotifications();
     }
+    // Notifications only delivered if user doesn't have an active WebSocket connection, so we disconnect on pause, and reconnect on resume
     await this.platform.ready();
     this.platform.pause.subscribe(async () => {
       await this.chatService.disconnectUser();
@@ -74,15 +74,6 @@ export class HomePage implements OnInit {
 
     await PushNotifications.addListener('pushNotificationReceived', async notification => {
       console.log('Push notification received: ', JSON.stringify(notification, null, 2));
-      await this.chatService.init(API_KEY, USER_ID, USER_TOKEN);
-      const response = await this.chatService.chatClient.getMessage(notification.data.message_id);
-      const message = response.message;
-      await this.chatService.disconnectUser();
-      LocalNotifications.schedule({notifications: [{
-        title: message.user.name,
-        body: message.text,
-        id: parseInt(notification.id, 10),
-      }]});
     });
 
     await PushNotifications.addListener('pushNotificationActionPerformed', notification => {

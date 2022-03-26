@@ -39,15 +39,13 @@ And on Android Studio, run the app using any emulator you want.
 
 ## Push notifications on Android
 
-This branch contains an example on how to set up [push notifications v2](https://getstream.io/chat/docs/javascript/push_introduction/?language=javascript) to your application using Firebase.
+This branch contains an example on how to set up [push notifications v1 (legacy)](https://getstream.io/chat/docs/javascript/push_introduction/?language=javascript) to your application using Firebase.
 
 Steps:
 
-- [Configuring dashboard notifications on the Stream dashboard](https://getstream.io/chat/docs/sdk/android/client/guides/push-notifications/firebase/#configuring-notifications-on-the-stream-dashboard)
+- [Configuring dashboard notifications on the Stream dashboard](https://getstream.io/chat/docs/sdk/android/client/guides/push-notifications/firebase/#configuring-notifications-on-the-stream-dashboard) - please note that since we're using the v1 API you'll have the provide the `server key` field of the `Cloud Messaging API (Legacy)` box under the `Cloud messaging` settings
 - This application uses the [`@capactior/push-notifications`](https://capacitorjs.com/docs/apis/push-notifications) plugin, you can follow [Capacitor's guide on how to set it up with Firebase](https://capacitorjs.com/docs/guides/push-notifications-firebase)
-- This application uses [`@capactior/local-notifications`](https://capacitorjs.com/docs/apis/local-notifications) to display the received notification to the user
-
-Please note that our v2 push API uses data-only notifications and the `@capactitor/push-notification` plugin [won't deliver those if the application is killed](https://capacitorjs.com/docs/apis/push-notifications#silent-push-notifications-data-only-notifications).
+- the `src/app/home/home.page.ts` component includes the necessary set up (please note that our API won't deliver notifications if the user has an open WebSocket connection, so you have to disconnect when the app is paused, and reconnect when it's resumed)
 
 <!-- ## Set Up Your Ionic Environment
 
