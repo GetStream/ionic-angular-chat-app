@@ -30,4 +30,6 @@ npm-debug.log*
 /plugins
 /www
 .angular
-android
+resources
+android/app/google-services.json
+src/environments/**/*.ts
