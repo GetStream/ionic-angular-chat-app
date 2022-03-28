@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { Capacitor } from '@capacitor/core'
 import { PushNotifications } from '@capacitor/push-notifications'
-import { Platform } from '@ionic/angular'
 import { environment } from 'src/environments/environment'
 import {
   ChatClientService,
@@ -26,7 +25,6 @@ export class HomePage implements OnInit {
     private channelService: ChannelService,
     private streamI18nService: StreamI18nService,
     private themeService: ThemeService,
-    private platform: Platform
   ) {
     const apiKey = API_KEY
     const userId = USER_ID
@@ -46,7 +44,6 @@ export class HomePage implements OnInit {
     if (isAndroid) {
       await this.registerNotifications();
       await this.addListeners();
-      await this.getDeliveredNotifications();
     }
   }
 
@@ -81,10 +78,5 @@ export class HomePage implements OnInit {
     }
 
     await PushNotifications.register();
-  }
-
-  async getDeliveredNotifications() {
-    const notificationList = await PushNotifications.getDeliveredNotifications();
-    console.log('delivered notifications', notificationList);
   }
 }
