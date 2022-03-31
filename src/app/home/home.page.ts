@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core'
+import { Capacitor } from '@capacitor/core'
+import { PushNotifications } from '@capacitor/push-notifications'
+import { environment } from 'src/environments/environment'
 import {
   ChatClientService,
   ChannelService,
@@ -6,10 +9,10 @@ import {
   ThemeService,
 } from 'stream-chat-angular'
 
-const USER_ID = 'id of a user in your app'
-const API_KEY = 'api key of your app'
+const USER_ID = environment.userId
+const API_KEY = environment.apiKey
 const USER_TOKEN =
-  'enter user token here'
+  environment.userToken;
 
 @Component({
   selector: 'app-home',
@@ -21,7 +24,7 @@ export class HomePage implements OnInit {
     private chatService: ChatClientService,
     private channelService: ChannelService,
     private streamI18nService: StreamI18nService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
   ) {
     const apiKey = API_KEY
     const userId = USER_ID
@@ -32,21 +35,48 @@ export class HomePage implements OnInit {
   }
 
   async ngOnInit() {
-    const channel = this.chatService.chatClient.channel(
-      'messaging',
-      'talking-about-angular',
-      {
-        // add as many custom fields as you'd like
-        image:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/2048px-Angular_full_color_logo.svg.png',
-        name: 'Talking about Angular',
-        members: [USER_ID],
-      }
-    )
-    await channel.create()
-    this.channelService.init({
+    await this.channelService.init({
       type: 'messaging',
-      id: { $eq: 'talking-about-angular' },
     })
+
+    const platform = Capacitor.getPlatform();
+    const isAndroid = platform === 'android'
+    if (isAndroid) {
+      await this.registerNotifications();
+      await this.addListeners();
+    }
+  }
+
+  async addListeners () {
+    await PushNotifications.addListener('registration', token => {
+      console.info('Registration token: ', token.value);
+      this.chatService.chatClient.addDevice(token.value, 'firebase', USER_ID);
+    });
+
+    await PushNotifications.addListener('registrationError', err => {
+      console.error('Registration error: ', err.error);
+    });
+
+    await PushNotifications.addListener('pushNotificationReceived', async notification => {
+      console.log('Push notification received: ', JSON.stringify(notification, null, 2));
+    });
+
+    await PushNotifications.addListener('pushNotificationActionPerformed', notification => {
+      console.log('Push notification action performed', notification.actionId, notification.inputValue);
+    });
+  }
+
+  async registerNotifications() {
+    let permStatus = await PushNotifications.checkPermissions();
+
+    if (permStatus.receive === 'prompt') {
+      permStatus = await PushNotifications.requestPermissions();
+    }
+
+    if (permStatus.receive !== 'granted') {
+      throw new Error('User denied permissions!');
+    }
+
+    await PushNotifications.register();
   }
 }

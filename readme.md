@@ -14,7 +14,18 @@ To run the Android app, note that you must have [Android Studio](https://develop
 
 After cloning this repo, install the dependencies using `npm install`.
 
-In `src/app/home/home.page.ts`, provide the `api_key` of your app, a `user_id` and a `user_token`. For testing/development purposes, you can manually generate a token using [this token and authentication guide](https://getstream.io/chat/docs/react/tokens_and_authentication/#manually-generating-tokens) after signing into your Stream account.
+Create a file in `src/environments` called `environment.ts`, with the following structure:
+
+```typescript
+export const environment = {
+  production: boolean,
+  userId: string,
+  apiKey: string,
+  userToken: string,
+}
+```
+
+For testing/development purposes, you can manually generate a token using [this token and authentication guide](https://getstream.io/chat/docs/react/tokens_and_authentication/#manually-generating-tokens) after signing into your Stream account.
 
 Run a build of the codebase for web using `npm run build`.
 
@@ -25,6 +36,16 @@ Add the android app using `npx cap add android`. This will generate the code for
 Then open the project in Android Studio using `npx cap open android`
 
 And on Android Studio, run the app using any emulator you want.
+
+## Push notifications on Android
+
+This branch contains an example on how to set up [push notifications v1 (legacy)](https://getstream.io/chat/docs/javascript/push_introduction/?language=javascript) to your application using Firebase.
+
+Steps:
+
+- [Configuring dashboard notifications on the Stream dashboard](https://getstream.io/chat/docs/sdk/android/client/guides/push-notifications/firebase/#configuring-notifications-on-the-stream-dashboard) - please note that since we're using the v1 API you'll have the provide the `server key` field of the `Cloud Messaging API (Legacy)` box under the `Cloud messaging` settings
+- This application uses the [`@capactior/push-notifications`](https://capacitorjs.com/docs/apis/push-notifications) plugin, you can follow [Capacitor's guide on how to set it up with Firebase](https://capacitorjs.com/docs/guides/push-notifications-firebase)
+- the `src/app/home/home.page.ts` component includes the necessary set up
 
 <!-- ## Set Up Your Ionic Environment
 
